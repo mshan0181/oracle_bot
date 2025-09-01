@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle RAG Chatbot</title>
+    <style>
+        /* This is where the background image CSS is added */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-image: url("{{ url_for('static', filename='oracle_logo.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #333;
+        }
+        /* The following CSS is for the chatbot container and its elements */
+        .chat-container {
+            /* Increased the maximum width */
+            max-width: 1200px; /* Changed to a very large width */
+            margin: 50px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent background for readability */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Increased the vertical height */
+            height: 900px; /* Changed to a very large height */
+            display: flex;
+            flex-direction: column;
+        }
+        .message-box { 
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .user-message { text-align: right; background-color: #e6f7ff; }
+        .bot-message { text-align: left; background-color: #f0f0f0; }
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 10px;
+        }
+        #chat-input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            height: 40px;
+        }
+        #send-button { padding: 8px 12px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Oracle RAG Chatbot</h1>
+        <div id="chat-messages"></div>
+        <input type="text" id="chat-input" placeholder="Type your question...">
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        // Your existing JavaScript code remains here.
+        const input = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const chatMessages = document.getElementById('chat-messages');
+
+        sendButton.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const query = input.value.trim();
+            if (query === '') return;
+
+            // Display user message
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('message-box', 'user-message');
+            userMessageDiv.textContent = `You: ${query}`;
+            chatMessages.appendChild(userMessageDiv);
+            
+            // Clear input field
+            input.value = '';
+
+            // Display "thinking" message
+            const botMessageDiv = document.createElement('div');
+            botMessageDiv.classList.add('message-box', 'bot-message');
+            botMessageDiv.textContent = 'Chatbot: Thinking...';
+            chatMessages.appendChild(botMessageDiv);
+            
+            // Scroll to the bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Send query to the backend
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the bot's response
+                botMessageDiv.textContent = `Chatbot: ${data.response}`;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                botMessageDiv.textContent = 'Chatbot: An error occurred. Please try again.';
+            });
+        }
+    </script>
+</body>
+</html>
