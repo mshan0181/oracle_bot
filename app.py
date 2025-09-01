@@ -13,7 +13,7 @@ ORACLE_PASSWORD = os.environ.get("ORACLE_PASSWORD", "Summer2025")
 ORACLE_DSN = os.environ.get("ORACLE_DSN", "localhost:1521/freepdb1")
 
 # Gemini API key
-GENAI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyBfNTDVHu9ZbisNvJfItjn8x8C442dS_sM")
+GENAI_API_KEY = os.environ.get("GEMINI_API_KEY", "XXXXXXXXXXXXXXXXXXXXXXX")
 
 # Create a Flask web application
 app = Flask(__name__)
@@ -108,3 +108,4 @@ def chat():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
