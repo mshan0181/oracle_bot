@@ -9,7 +9,7 @@ from flask import Flask, request, render_template, jsonify
 
 # Database connection details
 ORACLE_USER = os.environ.get("ORACLE_USER", "sample")
-ORACLE_PASSWORD = os.environ.get("ORACLE_PASSWORD", "Summer2025")
+ORACLE_PASSWORD = os.environ.get("ORACLE_PASSWORD", "XXXXXXXXX")
 ORACLE_DSN = os.environ.get("ORACLE_DSN", "localhost:1521/freepdb1")
 
 # Gemini API key
@@ -108,4 +108,5 @@ def chat():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
 
